@@ -33,7 +33,7 @@ TEST(Urok0, TransformLowerUpwer) {
 
 TEST(Urok0, StringToNumber) {
     string str = "42";
-    int number = stoi(str);
+    unsigned number = stoi(str);
     EXPECT_EQ(42, number);
 
     str = "3.1415";
@@ -52,15 +52,45 @@ TEST(Urok0, StringToNumber) {
 TEST(Urok0, SubstringSearch) {
 
     string str = "Ishem chislo 42 v stroke";
-    int indexOfIshem = str.find("Ishem");
+    unsigned indexOfIshem = str.find("Ishem");
     EXPECT_EQ(0, indexOfIshem);
 
-    int indexOf33 = str.find("33");
+    unsigned indexOf33 = str.find("33");
     EXPECT_EQ(string::npos, indexOf33);;
 
-    int badIndexOf42 = str.find(42);
+    unsigned badIndexOf42 = str.find(42);
     EXPECT_EQ(string::npos, badIndexOf42);;
 
-    int indexOf42 = str.find("42");
-    EXPECT_EQ(indexOf42, str.find("42"));;
+    unsigned indexOf42 = str.find("42");
+    EXPECT_EQ(indexOf42, indexOf42);;
+
+    indexOf42 = str.find("42", indexOf42+1);
+    EXPECT_EQ(string::npos, indexOf42);;
+}
+
+TEST(Urok0, Substring) {
+
+    string str = "Ishem chislo 42 v stroke";
+    unsigned indexOfChislo = str.find("chislo");
+    EXPECT_EQ("chislo", str.substr(indexOfChislo, 6));
+
+    string empty;
+    EXPECT_TRUE(empty.empty());
+    EXPECT_FALSE(str.empty());
+}
+
+TEST(Urok0, TrimLeftRight) {
+    string withSpaces = "     trim some spaces please     ";
+
+    //lets trim spaces from begining
+    while(*withSpaces.begin() == ' '){
+        withSpaces.erase(withSpaces.begin());
+    }
+    EXPECT_EQ("trim some spaces please     ", withSpaces);
+
+    //lets trim spaces from end
+    while(*(withSpaces.end()-1) == ' '){
+        withSpaces.pop_back();
+    }
+    EXPECT_EQ("trim some spaces please", withSpaces);
 }
