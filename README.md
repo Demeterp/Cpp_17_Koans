@@ -5,3 +5,5 @@ It is being inspired by Kotlin Koans and C++ Recipes by Fedor Obrazcov.
 
 I hope it will help me to learn some modern C++ and teach my daughter.
 
+Project created in CLion 2018.2
+
