@@ -19,14 +19,30 @@ const int FILL_ME = 0;
 
 TEST(Pointers, basic) {
 
-    int a[] = {0, 1, 2, 3, 4, 5};
-    EXPECT_EQ(1, a[1]);
-    EXPECT_EQ(5, a[5]);
+    int z = 10;
+    int a[] = {0, 2, 6, 8, 10, 12};
+    int b = 127;
+    int c = 256;
+    EXPECT_EQ(2, a[1]);
+    EXPECT_EQ(12, a[5]);
 
     int *parr = a;
-    EXPECT_EQ(*parr, a[1]);
+    EXPECT_EQ(*parr, 0);
+    EXPECT_EQ(*parr, a[0]);
+
+    EXPECT_EQ(2, a[1]);
 
     int *pa = &a[1];
+    EXPECT_EQ(*pa, a[1]);
+    EXPECT_EQ(*(pa - 1), a[0]);
+
+    EXPECT_EQ(*(parr + 5), 12);
+    EXPECT_EQ(*(parr + 5), a[5]);
+
+    //exit through array boundary
+    EXPECT_NE(*(parr + 6), 127);
+
+
     //int *powerful_pointer = &an_int;
 
 
