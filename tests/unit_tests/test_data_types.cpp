@@ -75,8 +75,8 @@ TEST(DataTypes, basic) {
 
     signed long int r;
     EXPECT_EQ(sizeof(r), FILL_ME);
-    EXPECT_EQ(ULONG_MAX, 2147483647L);
-    EXPECT_EQ(ULONG_MAX, FILL_ME);
+    EXPECT_EQ(LONG_MAX, 2147483647L);
+    EXPECT_EQ(LONG_MAX, FILL_ME);
 
     unsigned long s;
     EXPECT_EQ(sizeof(s), FILL_ME);
@@ -110,7 +110,9 @@ TEST(DataTypes, basic) {
     unsigned long long int z;
     EXPECT_EQ(sizeof(z), FILL_ME);
     EXPECT_EQ(ULLONG_MAX, 0xffffffffffffffffull);
-    EXPECT_EQ(ULLONG_MAX, FILL_ME);
+    ASSERT_TRUE(ULLONG_MAX < pow(10, 20));
+    ASSERT_TRUE(pow(10, 19) < ULLONG_MAX);
+    EXPECT_EQ(ULLONG_MAX, 18446744073709551615);
 
     std::string aString;
     EXPECT_EQ(sizeof(aString), 24);

@@ -10,7 +10,7 @@
 
 using namespace std;
 
-TEST(Urok0, insert) {
+TEST(Strings, insert) {
     string s = "string";
 
 //insert() something into 's' to make it work
@@ -22,7 +22,7 @@ TEST(Urok0, insert) {
     EXPECT_EQ(s, "Substring!");
 }
 
-TEST(Urok0, TransformLowerUpwer) {
+TEST(Strings, TransformLowerUpwer) {
     string str = "Lower and Upper";
     transform(str.begin(), str.end(), str.begin(), ::tolower);
     EXPECT_EQ("lower and upper", str);
@@ -31,7 +31,7 @@ TEST(Urok0, TransformLowerUpwer) {
     EXPECT_EQ("LOWER AND UPPER", str);
 }
 
-TEST(Urok0, StringToNumber) {
+TEST(Strings, StringToNumber) {
     string str = "42";
     unsigned number = stoi(str);
     EXPECT_EQ(42, number);
@@ -49,7 +49,7 @@ TEST(Urok0, StringToNumber) {
     EXPECT_EQ("0.250000", str);
 }
 
-TEST(Urok0, SubstringSearch) {
+TEST(Strings, SubstringSearch) {
 
     string str = "Ishem chislo 42 v stroke";
     unsigned indexOfIshem = str.find("Ishem");
@@ -68,7 +68,7 @@ TEST(Urok0, SubstringSearch) {
     EXPECT_EQ(string::npos, indexOf42);;
 }
 
-TEST(Urok0, Substring) {
+TEST(Strings, Substring) {
 
     string str = "Ishem chislo 42 v stroke";
     unsigned indexOfChislo = str.find("chislo");
@@ -79,7 +79,7 @@ TEST(Urok0, Substring) {
     EXPECT_FALSE(str.empty());
 }
 
-TEST(Urok0, TrimLeftRight) {
+TEST(Strings, TrimLeftRight) {
     string withSpaces = "     trim some spaces please     ";
 
     //lets trim spaces from begining

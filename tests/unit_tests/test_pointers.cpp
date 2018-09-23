@@ -29,6 +29,7 @@ TEST(Pointers, basic) {
     int *parr = a;
     EXPECT_EQ(*parr, 0);
     EXPECT_EQ(*parr, a[0]);
+    EXPECT_EQ(parr, &(a[0]));
 
     EXPECT_EQ(2, a[1]);
 
