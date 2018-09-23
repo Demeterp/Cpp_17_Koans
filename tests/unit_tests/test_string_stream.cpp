@@ -13,7 +13,7 @@ using namespace std;
 
 const int FILL_ME = 0;
 
-TEST(Strings, Stream) {
+TEST(StringStream, Stream) {
     string str = "1 2 10 20 30 500";
     stringstream stream(str);
     int numbers[6];
