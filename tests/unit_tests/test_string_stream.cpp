@@ -5,27 +5,23 @@
 
 #include <cmath>
 #include <string>
+#include <vector>
 #include <iostream>
 #include <algorithm>
 
-
 using namespace std;
-
-const int FILL_ME = 0;
 
 TEST(StringStream, Stream) {
     string str = "1 2 10 20 30 500";
     stringstream stream(str);
-    int numbers[6];
-
-    copy(istream_iterator<int, char>(stream), istream_iterator<int, char>(), numbers);
-
-    int etalon[6] = {1, 2, 10, 20, 30, 500};
-    for (int i: numbers){
-        cout << endl << i;
+    vector<int> numbers(6);
+    for (int &number : numbers) {
+        stream >> number;
     }
 
-    //EXPECT_EQ(numbers , etalon);
-
-
+    vector<int> etalon = {1, 2, 10, 20, 30, 500};
+    ASSERT_EQ(numbers, etalon);
+    for (int i = 0; i < numbers.size(); i++) {
+        ASSERT_EQ(numbers[i], etalon[i]);
+    }
 }
