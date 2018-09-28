@@ -25,10 +25,16 @@ namespace {
     const datatype INITIAL_VALUE = -1;
 
     datatype mergeColor(int lvl, datatype a, datatype b) {
-        if (a == INITIAL_VALUE) return b;
-        if (b == INITIAL_VALUE) return a;
+//        if (a == INITIAL_VALUE) return b;
+//        if (b == INITIAL_VALUE) return a;
         if (a != b) return -1;
         else return a;
+    };
+
+    datatype summa(int lvl, datatype a, datatype b) {
+        if (a == INITIAL_VALUE) return b;
+        if (b == INITIAL_VALUE) return a;
+        return a + b;
     };
 
     struct PaintTree {
@@ -36,6 +42,7 @@ namespace {
         unsigned length, n, maxLevel;
 
         vector<datatype> data;
+        //vector<datatype> lazy;
         function<datatype(int, datatype, datatype)> F;
 
         // Create a segtree which stores the range [begin, end) in its bottommost level.
@@ -45,7 +52,8 @@ namespace {
             n = nearestPowerOfTwo(length);
             maxLevel = 32 - __builtin_clz(n) - 1;
             data = vector<datatype>(n * 2, INITIAL_VALUE);
-            if (length > 1) build_rec(1, n / 2);
+            //lazy = vector<datatype>(n * 2, 0);
+            if (length > 1) build_rec(1, 0, n / 2);
         }
 
         static unsigned nearestPowerOfTwo(unsigned x) {
@@ -61,14 +69,6 @@ namespace {
             return data[index(lvl, i)];
         }
 
-        void build_rec(unsigned lvl, int count) {
-            for (int i = 0; i < count; i++) {
-                data[index(lvl, i)] = F(lvl, data[index(lvl - 1, i * 2)], data[index(lvl - 1, i * 2 + 1)]);
-            }
-            if (count > 1) build_rec(lvl + 1, count / 2);
-            else maxLevel = lvl;
-        }
-
         /**
          * Equivalent to query(0, end) or at(maxLevel, 0);
          * @return
@@ -78,8 +78,8 @@ namespace {
         }
 
         datatype query(int left, int right) {
-            datatype leftValue = data[left];
-            datatype rightValue = data[right];
+            datatype leftValue = at(0, left);
+            datatype rightValue = at(0, right);
             if (left == right) {
                 return leftValue;
             }
@@ -99,72 +99,101 @@ namespace {
             assert("Unreachable Code");
         }
 
+        static inline int leftInd(int node) {
+            return node * 2 + 1;
+        }
+
+        static inline int rightInd(int node) {
+            return node * 2 + 2;
+        }
+
+        datatype leftValue(int node) {
+            return data[leftInd(node)];
+        }
+
+        datatype rightValue(int node) {
+            return data[rightInd(node)];
+        }
+
         void update(int ind, datatype value) {
             assert(ind >= 0);
             assert(ind < length);
-            data[ind] = value;
+            data[index(0, ind)] = value;
             for (int lvl = 1; lvl <= maxLevel; lvl++) {
                 ind /= 2;
-                data[index(lvl, ind)] = F(lvl, at(lvl - 1, ind * 2), at(lvl - 1, ind * 2 + 1));
+                int node = index(lvl, ind);
+                data[node] = F(lvl, leftValue(node), rightValue(node));
             }
         }
 
         void push(int lvl, int ind) {
-            if (lvl == 0) return;
-            int color = at(lvl, ind);
+            push(index(lvl, ind));
+        }
+
+        void push(int node) {
+            if (node > n) return;
+            int color = data[node];
             if (color != INITIAL_VALUE) {
-                data[index(lvl, ind)] = -1;
-                data[index(lvl - 1, ind * 2)] = color;
-                data[index(lvl - 1, ind * 2 + 1)] = color;
+                data[node] = -1;
+                data[leftInd(node)] = color;
+                data[rightInd(node)] = color;
             }
         }
 
-        static inline int leftPos(int lvl, int ind) {
-            int p2 = 1 << lvl;
-            return ind * p2;
+        static inline int leftBound(int lvl, int ind) {
+            return ind * 1 << lvl;;
         }
 
-        static inline int rightPos(int lvl, int ind) {
-            int p2 = 1 << lvl;
-            return ind * p2 + p2 - 1;
+        static inline int rightBound(int lvl, int ind) {
+            return (ind + 1) * (1 << lvl) - 1;
+        }
+
+        void updateRange(int left, int right, datatype delta) {
+            for (int i = left; i <= right; i++) {
+                data[n - 1 + i] += delta;
+            }
+            build_rec(1, left / 2, right / 2);
+        }
+
+        void build_rec(unsigned lvl, int left, int right) {
+            for (int i = left; i <= right; i++) {
+                int node = index(lvl, i);
+                data[node] = F(lvl, leftValue(node), rightValue(node));
+            }
+            if (lvl != maxLevel) build_rec(lvl + 1, left / 2, right / 2);
         }
 
         void paint(int left, int right, datatype color) {
-            assert(left >= 0);
-            assert(right < length);
-            paint(maxLevel, 0, left, right, color);
+            paint(0, left, right, color, 0, n - 1);
         }
 
-        void paint(int lvl, int ind, int left, int right, datatype color) {
-            int leftB = leftPos(lvl, ind);
-            int rightB = rightPos(lvl, ind);
+        void paint(int node, int left, int right, datatype color, int leftB, int rightB) {
             if (rightB < left) return; //miss
             if (leftB > right) return; //miss
             if (left <= leftB && right >= rightB) {
-                data[index(lvl, ind)] = color;
-            } else if (lvl > 0) {
-                push(lvl, ind);
-                paint(lvl - 1, 2 * ind, left, right, color);
-                paint(lvl - 1, 2 * ind + 1, left, right, color);
+                data[node] = color;
+            } else if (node <= n) {
+                push(node);
+                int mid = (leftB + rightB) >> 1;
+                paint(leftInd(node), left, right, color, leftB, mid);
+                paint(rightInd(node), left, right, color, mid + 1, rightB);
             }
         }
 
         int getColor(int position) {
-            return getColor(maxLevel, 0, position);
+            return getColor(0, position, 0, n - 1);
         }
 
-        int getColor(int lvl, int ind, int position) {
-            int color = at(lvl, ind);
-            if (color != INITIAL_VALUE || lvl == 0) return color;
-            int leftB = leftPos(lvl, ind);
-            int rightB = rightPos(lvl, ind);
+        int getColor(int node, int position, int leftB, int rightB) {
+            int color = data[node];
+            if (color != INITIAL_VALUE || node > n) return color;
             assert(position >= leftB);
             assert(position <= rightB);
-            int mid = (leftB + rightB) / 2;
+            int mid = (leftB + rightB) >> 1;
             if (position <= mid)
-                return getColor(lvl - 1, 2 * ind, position);
+                return getColor(leftInd(node), position, leftB, mid);
             else
-                return getColor(lvl - 1, 2 * ind + 1, position);
+                return getColor(rightInd(node), position, mid + 1, rightB);
         }
 
         void println() {
@@ -190,6 +219,36 @@ namespace {
 int main() {
     fastio;
     unsigned n, m, size;
+
+    PaintTree t = PaintTree(10, mergeColor);
+    t.paint(0, 9, 1);
+    t.paint(0, 5, 2);
+    t.paint(0, 0, 3);
+    t.paint(1, 1, 4);
+    t.println();
+
+    //assert(3 == t.getColor(0));
+    assert(4 == t.getColor(1));
+    assert(2 == t.getColor(2));
+    assert(2 == t.getColor(3));
+    assert(2 == t.getColor(4));
+    assert(2 == t.getColor(5));
+
+    t.println();
+    assert(1 == t.getColor(6));
+    assert(1 == t.getColor(7));
+    assert(1 == t.getColor(8));
+    assert(1 == t.getColor(9));
+
+    t.paint(0, 9, 8);
+    t.paint(9, 9, 9);
+    for (int i = 0; i < 9; ++i) {
+        assert(8 == t.getColor(i));
+    }
+    assert(9 == t.getColor(9));
+
+    t.updateRange(0, 5, 1);
+    t.println();
 
     { //https://codeforces.com/contest/292/problem/E
         //43545400	2018-09-28 21:58:22	Demeter	E - Копирование данных	GNU C++17	Полное решение	654 мс	3000 КБ
@@ -232,30 +291,7 @@ int main() {
             }
         }
 
-//        t.paint(0, 9, 1);
-//        t.paint(0, 5, 2);
-//        t.paint(0, 0, 3);
-//        t.paint(1, 1, 4);
-//        t.println();
-//
-//        //assert(3 == t.getColor(0));
-//        assert(4 == t.getColor(1));
-//        assert(2 == t.getColor(2));
-//        assert(2 == t.getColor(3));
-//        assert(2 == t.getColor(4));
-//        assert(2 == t.getColor(5));
-//
-//        assert(1 == t.getColor(6));
-//        assert(1 == t.getColor(7));
-//        assert(1 == t.getColor(8));
-//        assert(1 == t.getColor(9));
-//
-//        t.paint(0, 9, 8);
-//        t.paint(9, 9, 9);
-//        for (int i = 0; i <9 ; ++i) {
-//            assert(8 == t.getColor(i));
-//        }
-//        assert(9 == t.getColor(9));
+
     }
 
 }
