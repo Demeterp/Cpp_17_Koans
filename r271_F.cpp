@@ -18,35 +18,36 @@
 
 using namespace std;
 
+namespace {
 
-unsigned nearestPowerOfTwo(unsigned x) {
-    int validBits = 32 - __builtin_clz(x);
-    int setBits = __builtin_popcount(x);
-    if (setBits == 1) return x;
-    else return 1u << validBits;
-}
+
+    unsigned nearestPowerOfTwo(unsigned x) {
+        int validBits = 32 - __builtin_clz(x);
+        int setBits = __builtin_popcount(x);
+        if (setBits == 1) return x;
+        else return 1u << validBits;
+    }
 
 #define datatype tuple<int, int, int>
 
-const datatype INITIAL_VALUE = {0, 0, 0};
+    const datatype INITIAL_VALUE = {0, 0, 0};
 
-datatype summa(int lvl, datatype a, datatype b) {
-    if (a == INITIAL_VALUE) return b;
-    if (b == INITIAL_VALUE) return a;
-    int gcdLeft = get<2>(a);
-    int gcdRight = get<2>(b);
-    int wc = 0;
-    int winner = min(get<0>(a), get<0>(b));
-    if (gcdRight % get<0>(a) == 0) {
-        wc += get<1>(a);
-    }
-    if (gcdLeft % get<0>(b) == 0) {
-        wc += get<1>(b);
-    }
-    return {winner, wc, __gcd(gcdLeft, gcdRight)};
-};
+    datatype summa(int lvl, datatype a, datatype b) {
+        if (a == INITIAL_VALUE) return b;
+        if (b == INITIAL_VALUE) return a;
+        int gcdLeft = get<2>(a);
+        int gcdRight = get<2>(b);
+        int wc = 0;
+        int winner = min(get<0>(a), get<0>(b));
+        if (gcdRight % get<0>(a) == 0) {
+            wc += get<1>(a);
+        }
+        if (gcdLeft % get<0>(b) == 0) {
+            wc += get<1>(b);
+        }
+        return {winner, wc, __gcd(gcdLeft, gcdRight)};
+    };
 
-namespace {
 
     struct MyTree {
         unsigned length, n, maxLevel;
@@ -155,7 +156,7 @@ namespace {
 }
 
 
-int main() {
+int r271_f_main() {
     fastio;
     unsigned n, m;
 
@@ -180,4 +181,5 @@ int main() {
         }
     }
 
+    return 0;
 }
