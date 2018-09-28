@@ -1,3 +1,5 @@
+//tasks from
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -9,221 +11,101 @@
 
 using namespace std;
 
-//int solveD(vector<int> &keys, vector<ul> &sums, int l, int r) {
-//    long double summNaOtrzeke = keys[r] + sums[r] - sums[l];
-//    int lengthOtrzeka = r - l + 1;
-//    auto leftIt = keys.begin() + l;
-//    auto rightIt = keys.begin() + r;
-//    auto it = lower_bound(leftIt, rightIt, summNaOtrzeke / lengthOtrzeka);
-//    return *it;
-//}
-//
-//vector<ul> sums(vector<int> &keys) {
-//    vector<ul> sums(keys.size());
-//    ul sum = 0;
-//    for (ul i = 0; i < keys.size(); i++) {
-//        sums[i] = sum;
-//        sum += keys[i];
-//    }
-//    return sums;
-//}
-
-vector<string> solveC(string &s) {
-    vector<string> chisla;
-    while (!s.empty()) {
-        auto notNull = s.find_first_not_of('0');
-        if (notNull != string::npos) {
-            s = s.substr(notNull);
-        } else {
-            s = "";
-        }
-        if (s.empty()) break;
-
-        string odin(s.length(), '1');
-        if (s >= odin) {
-            chisla.push_back(odin);
-            for (char &c : s) {
-                c -= 1;
-            }
-        } else {
-            chisla.emplace_back(string(s.length() - 1, '9'));
-            for (int i = 1; i < s.size(); i++) {
-                s[i] -= 9;
-            }
-        }
-
-        for (int i = s.size() - 1; i > 0; i--) {
-            if (s[i] < '0') {
-                s[i] += 10;
-                s[i - 1] -= 1;
-            }
-        }
-    }
-    return chisla;
-}
-
-int maxLength = 0;
-int maxCity = 0;
-vector<int> putDomoj;
-vector<bool> visited;
-
-
-void traverse(vector<vector<int>> &nodes, vector<int> &path, int current, int previous) {
-    visited[current] = true;
-    path.push_back(current);
-
-    if (path.size() > maxLength) {
-        maxLength = path.size();
-        maxCity = current;
-    }
-
-    for (int nextNode: nodes[current]) {
-        if (nextNode == previous) continue;
-        if (nextNode == 1 && path.size() > 1) {
-            putDomoj = path;
-        }
-        if (!visited[nextNode]) {
-            traverse(nodes, path, nextNode, current);
-            path.pop_back();
-        }
-    }
-}
-
-int main() {
+int ss__main() {
     fastio;
-
-//    { // task D
-//        //go read some https://cses.fi/book/book.pdf
-//        int n, m;
-//        cin >> n >> m;
-//        vector<int> keys(n);
+//    { http://codeforces.com/contest/1041/problem/A
+//        int n;
+//        cin >> n;
+//        set<int> keys;
+//        for (int i = 0; i < n; ++i) {
+//            int v;
+//            cin >> v;
+//            keys.insert(v);
+//        }
+//        int delta = *(--keys.end()) - *keys.begin();
+//        int stolen = 1+ delta - keys.size();
+//        cout << stolen;
 //
-//        for (int i = 0; i < n; i++) {
-//            cin >> keys[i];
-//        }
-//        vector<ul> summs = sums(keys);
-//        for (int i = 0; i < m; i++) {
-//            int l, r;
-//            cin >> l >> r;
-//            cout << solveD(keys, summs, l - 1, r - 1) << endl;
-//        }
 //    }
 
-//    { //task A
-//        int n;
-//        cin >> n;
-//        vector<int> mestoByDrug(n+1);
-//        for (int mesto = 1; mesto <= n; mesto++) {
-//            int drug;
-//            cin >> drug;
-//            mestoByDrug[drug] = mesto;
-//        }
-//        for (int drug = 1; drug <= n; drug++) {
-//            cout << mestoByDrug[drug] << " ";
-//        }
+//    //http://codeforces.com/contest/1041/problem/B
+//    {
+//        ul a, b, x, y;
+//        cin >> a >> b >> x >> y;
+//        ul g = __gcd(x, y);
+//        ul w = x / g;
+//        ul h = y / g;
+//        x = a / w;
+//        y = b / h;
+//        cout << min(x,y);
 //    }
 
-//    { //task F
-//        int n;
-//        cin >> n;
-//        multiset<int> processes;
-//        for (int i = 0; i < 2 * n + 1; i++) {
-//            int id;
-//            cin >> id;
-//            processes.insert(id);
+
+//    { //task C
+//        int n, m, d;
+//        //200000 1000000000 231340971
+//
+//        cin >> n >> m >> d;
+//        set<int> minutes;
+//        unordered_map<int,int> indexByMinute;
+//        for (int index = 1; index <= n; ++index) {
+//            int minute;
+//            cin >> minute;
+//            minutes.insert(minute);
+//            indexByMinute[minute] = index;
 //        }
-//        for (int p: processes) {
-//            if (processes.count(p) == 1) {
-//                cout << p;
-//                return 0;
+//        int day = 0;
+//        vector<int> dayByIndex(n + 1);
+//        while (!minutes.empty()) {
+//            day++;
+//            int minute = -d;
+//            auto it = minutes.begin();
+//            while (it != minutes.end()) {
+//                minute = *it;
+//                dayByIndex[indexByMinute[minute]] = day;
+//                minutes.erase(it);
+//                it = minutes.lower_bound(minute + d + 1);
 //            }
 //        }
-//    }
-
-//    { // task C
-//        string s;
-//        cin >> s;
-//
-//        vector<string> chisla = solveC(s);
-//
-//        cout << chisla.size() << endl;
-//        for (string ch: chisla){
-//            cout << ch << " ";
+//        cout << day << endl;
+//        for (int i = 1; i <= n; ++i) {
+//            cout << dayByIndex[i] << " ";
 //        }
-//    }
+//  }
 
-//    { // task B
-//        int l, r;
-//        cin >> l >> r;
-//
-//        ul s = 1;
-//        for (ul i = l; i <= r; i++) {
-//            if (__gcd(s, i) == 1) {
-//                s += i;
-//            }
-//        }
-//        cout << s;
-//    }
-
-//    { //task A2 TreeMap, suppose druzja idut ne podrad
-//        int n;
-//        cin >> n;
-//        map<int, int> mestoByDrug;
-//        for (int mesto = 1; mesto <= n; mesto++) {
-//            int drug;
-//            cin >> drug;
-//            mestoByDrug[drug] = mesto;
-//        }
-//        for (pair<int, int> drug : mestoByDrug) {
-//            cout << drug.second << " ";
-//        }
-//    }
-
-//    { //task A3 using sort
-//        int n;
-//        cin >> n;
-//        vector<pair<int, int>> mestoByDrug;
-//        int drug;
-//        for (int mesto = 1; mesto <= n; mesto++) {
-//            cin >> drug;
-//            mestoByDrug.emplace_back(make_pair(drug, mesto));
-//        }
-//
-//        sort(mestoByDrug.begin(), mestoByDrug.end());
-//
-//        for (pair<int, int> pair : mestoByDrug) {
-//            cout << pair.second << " ";
-//        }
-//    }
-    { //task E
-        int n, m;
-        cin >> n >> m;
-        vector<vector<int>> nodes(n + 1);
-        for (int i = 0; i < m; ++i) {
-            int l, r;
-            cin >> l >> r;
-            nodes[l].push_back(r);
-            nodes[r].push_back(l);
-        }
-
-        visited.reserve(n + 1);
-        for (int j = 1; j <= n; ++j) {
-            visited[j] = false;
-        }
-        vector<int> path;
-        traverse(nodes, path, 1, -1);
-
-        if (putDomoj.empty()) {
-            cout << "-1" << endl;
-            cout << maxCity;
-        } else {
-            cout << putDomoj.size() << endl;
-            for (int node : putDomoj) {
-                cout << node << " ";
+    { //task D http://codeforces.com/contest/1041/problem/D
+        int n, h; //n < 2 * 10^5
+        cin >> n >> h;
+        vector<pair<int, int>> potoki(n);
+        vector<ul> sums(n);
+        vector<int> nado(n);
+        int lastNado = 0;
+        int lastRight = INT_MAX;
+        ul sum = 0;
+        for (int i = 0; i < n; ++i) {
+            int left, right;
+            cin >> left >> right;
+            sum += right - left;
+            sums[i] = sum;
+            potoki[i] = {left, right};
+            if (lastRight != INT_MAX) {
+                lastNado += left - lastRight;
             }
+            nado[i] = lastNado;
+            lastRight = right;
         }
+
+        ul maxSumm = 0;
+        for (int i = 0; i < n; ++i) { //perebor
+            auto it = upper_bound(nado.begin() + i, nado.end(), h + nado[i] - 1);
+            int index = it - nado.begin() - 1;
+            if (index < i) continue;
+            sum = sums[index];
+            if (i > 0) sum -= sums[i - 1];
+            if (sum > maxSumm) maxSumm = sum;
+        }
+
+        cout << maxSumm + h;
     }
 
-    return 0;
 }
-
