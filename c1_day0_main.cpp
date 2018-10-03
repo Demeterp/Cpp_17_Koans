@@ -68,11 +68,11 @@ vector<string> solveC(string &s) {
 int maxLength = 0;
 int maxCity = 0;
 vector<int> putDomoj;
-vector<bool> visited;
+vector<bool> visitedNodes;
 
 
 void traverse(vector<vector<int>> &nodes, vector<int> &path, int current, int previous) {
-    visited[current] = true;
+    visitedNodes[current] = true;
     path.push_back(current);
 
     if (path.size() > maxLength) {
@@ -85,7 +85,7 @@ void traverse(vector<vector<int>> &nodes, vector<int> &path, int current, int pr
         if (nextNode == 1 && path.size() > 1) {
             putDomoj = path;
         }
-        if (!visited[nextNode]) {
+        if (!visitedNodes[nextNode]) {
             traverse(nodes, path, nextNode, current);
             path.pop_back();
         }
@@ -212,9 +212,9 @@ int day0_main() {
             nodes[r].push_back(l);
         }
 
-        visited.reserve(n + 1);
+        visitedNodes.reserve(n + 1);
         for (int j = 1; j <= n; ++j) {
-            visited[j] = false;
+            visitedNodes[j] = false;
         }
         vector<int> path;
         traverse(nodes, path, 1, -1);

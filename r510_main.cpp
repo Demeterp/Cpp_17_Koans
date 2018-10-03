@@ -24,41 +24,43 @@ void op1(int a, int b) {
     operationsLeft--;
 }
 
-
 const int N = 2e5 + 5;
-
-int n;
-ll t;
-ll ans;
-vector<ll> sum(N);
-
-void solve(int left, int right) {
-    if (left == right) return;
-
-    int mid = (left + right) >> 1;
-    solve(left, mid);
-    solve(mid + 1, right);
-
-    int j = mid + 1;
-    for (int i = left; i <= mid; ++i) {
-        while (j <= right && sum[j] - sum[i] < t)
-            j++;
-        ans += j - mid - 1;
-    }
-    sort(sum.begin() + left, sum.begin() + right + 1);
-}
 
 int div510_main() {
     fastio;
-    cin >> n >> t;
-    for (int i = 1; i <= n; i++) {
-        cin >> sum[i];
-        sum[i] += sum[i - 1];
-    }
-    solve(0, n);
-    cout << ans;
 
-//    { //taskA
+    { //taskC https://codeforces.com/contest/1042/problem/A
+        int n;
+        ll t;
+        cin >> n >> t;
+        vector<ll> sum(N);
+
+        for (int i = 1; i <= n; i++) {
+            cin >> sum[i];
+            sum[i] += sum[i - 1];
+        }
+
+        ll ans = 0;
+        function<void(int, int)> solve = [&](int left, int right) {
+            if (left == right) return;
+
+            int mid = (left + right) >> 1;
+            solve(left, mid);
+            solve(mid + 1, right);
+
+            int j = mid + 1;
+            for (int i = left; i <= mid; ++i) {
+                while (j <= right && sum[j] - sum[i] < t) j++;
+                ans += j - mid - 1;
+            }
+            sort(sum.begin() + left, sum.begin() + right + 1);
+        };
+
+        solve(0, n);
+        cout << ans;
+    }
+
+//    { //taskA https://codeforces.com/contest/1042/problem/A
 //        int n, m;
 //        cin >> n >> m;
 //        vector<int> lavochki(n);
@@ -79,6 +81,7 @@ int div510_main() {
 //        if (max > kMin) kMin = max;
 //        cout << kMin << " " << kMax;
 //    }
+
 //    { //taskB https://codeforces.com/contest/1042/problem/B
 //        int n;
 //        cin >> n;

@@ -13,19 +13,19 @@
 
 using namespace std;
 
-void println(vector<int> v) {
-    for (int c: v) {
-        cout << c << " ";
-    }
-    cout << endl;
-}
-
-void println(vector<ll> v) {
-    for (ll c: v) {
-        cout << c << " ";
-    }
-    cout << endl;
-}
+//void println(vector<int> v) {
+//    for (int c: v) {
+//        cout << c << " ";
+//    }
+//    cout << endl;
+//}
+//
+//void println(vector<ll> v) {
+//    for (ll c: v) {
+//        cout << c << " ";
+//    }
+//    cout << endl;
+//}
 
 const int MOD = 1000000007;
 

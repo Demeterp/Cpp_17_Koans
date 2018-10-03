@@ -53,11 +53,11 @@ namespace {
             maxLevel = 32 - __builtin_clz(n) - 1;
             data = vector<datatype>(n * 2, INITIAL_VALUE);
             //lazy = vector<datatype>(n * 2, 0);
-            if (length > 1) build_rec(1, 0, n / 2);
+            if (length > 1) build(1, 0, n / 2);
         }
 
         static unsigned nearestPowerOfTwo(unsigned x) {
-            if (__builtin_popcount(x) == 1) return x; //power of 2
+            if (__builtin_popcount(x) == 1) return x; //x is power of 2
             else return 1u << (32 - __builtin_clz(x));
         }
 
@@ -67,14 +67,6 @@ namespace {
 
         datatype at(int lvl, int i) {
             return data[index(lvl, i)];
-        }
-
-        /**
-         * Equivalent to query(0, end) or at(maxLevel, 0);
-         * @return
-         */
-        datatype at() {
-            return at(maxLevel, 0);
         }
 
         datatype query(int left, int right) {
@@ -126,10 +118,6 @@ namespace {
             }
         }
 
-        void push(int lvl, int ind) {
-            push(index(lvl, ind));
-        }
-
         void push(int node) {
             if (node > n) return;
             int color = data[node];
@@ -152,15 +140,15 @@ namespace {
             for (int i = left; i <= right; i++) {
                 data[n - 1 + i] += delta;
             }
-            build_rec(1, left / 2, right / 2);
+            build(1, left / 2, right / 2);
         }
 
-        void build_rec(unsigned lvl, int left, int right) {
+        void build(unsigned lvl, int left, int right) {
             for (int i = left; i <= right; i++) {
                 int node = index(lvl, i);
                 data[node] = F(lvl, leftValue(node), rightValue(node));
             }
-            if (lvl != maxLevel) build_rec(lvl + 1, left / 2, right / 2);
+            if (lvl != maxLevel) build(lvl + 1, left / 2, right / 2);
         }
 
         void paint(int left, int right, datatype color) {
@@ -216,7 +204,7 @@ namespace {
 }
 
 
-int main() {
+int r292_main() {
     fastio;
     unsigned n, m, size;
 

@@ -10,7 +10,7 @@ using ordered_set = tree<A, null_type, less<A>, rb_tree_tag, tree_order_statisti
 
 typedef long long ll;
 
-int div510_2_main() {
+int r510_2_main() { //https://codeforces.com/contest/1042/problem/D
     ios::sync_with_stdio(0);
     cin.tie();
     unsigned int n;

@@ -60,10 +60,10 @@ int nums[3 * 100000 + 1];
 //task C staff end
 
 
-int main() {
+int r511_main() {
     fastio;
 
-    {  //task C https://codeforces.com/contest/1047/problem/C brute 295 мс !!!
+    {  //task C https://codeforces.com/contest/1047/problem/C brute 202 мс !!!
         unsigned n;
         cin >> n;
         vector<int> arr(n);
